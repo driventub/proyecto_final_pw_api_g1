@@ -20,7 +20,7 @@ import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteTo;
 
 @RestController
 @RequestMapping("/clientes")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin
 public class ClienteRestFulController {
 	
 	@Autowired

@@ -19,7 +19,7 @@ import uce.edu.proyecto_final_pw_api_g1.service.to.ReservaTo;
 
 @RestController
 @RequestMapping("/reservas")
-@CrossOrigin("http://localhost:8080/")
+@CrossOrigin
 public class ReservaRestFullController {
 	
 	@Autowired
