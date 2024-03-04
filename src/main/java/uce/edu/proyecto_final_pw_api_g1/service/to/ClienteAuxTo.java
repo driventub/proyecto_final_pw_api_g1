@@ -23,6 +23,17 @@ public class ClienteAuxTo extends RepresentationModel<ClienteAuxTo> implements S
 	private String genero;
 
 	private String tipoRegistro;
+	private String tarjetaCredito;
+	
+	
+
+	public String getTarjetaCredito() {
+		return tarjetaCredito;
+	}
+
+	public void setTarjetaCredito(String tarjetaCredito) {
+		this.tarjetaCredito = tarjetaCredito;
+	}
 
 	public Integer getId() {
 		return id;

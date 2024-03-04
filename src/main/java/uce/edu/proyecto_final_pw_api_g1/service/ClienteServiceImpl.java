@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.transaction.Transactional;
 import uce.edu.proyecto_final_pw_api_g1.repository.ClienteRepoImpl;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Reserva;
@@ -38,6 +39,7 @@ public class ClienteServiceImpl implements IClienteService {
 		if(this.clienteRepository.buscarClienteCedula(idCliente)==null) {
 			return null;
 		}
+		
 		return this.clienteRepository.buscarClienteCedula(idCliente);
 	}
 	
@@ -61,6 +63,7 @@ public class ClienteServiceImpl implements IClienteService {
 		clAuxTo.setFechaNacimiento(cliente.getFechaNacimiento());
 		clAuxTo.setGenero(cliente.getGenero());
 		clAuxTo.setTipoRegistro(cliente.getTipoRegistro());
+		clAuxTo.setTarjetaCredito(cliente.getTarjetaCredito());
 		return clAuxTo;
 	}
 	
@@ -71,6 +74,7 @@ public class ClienteServiceImpl implements IClienteService {
 		clTo.setApellido(cliente.getApellido());
 		clTo.setValorIva(valorIva(cliente.getReservas()));
 		clTo.setValorTotal(valorTotal(cliente.getReservas()));
+		
 		return clTo;
 	}
 	
@@ -96,5 +100,39 @@ public class ClienteServiceImpl implements IClienteService {
 	public void actualizarCliente(Cliente cliente) {
 		this.clienteRepository.actualizar(cliente);
 	}
+
+	@Override
+	public void actualizarClienteParcial(Cliente cliente) {
+		// TODO Auto-generated method stub
+		this.clienteRepository.actualizarParcial(cliente);
+	}
+
+	@Override
+	public List<ClienteAuxTo> verClientes() {
+	    List<Cliente> clientes = this.clienteRepository.listarClientes();
+	    List<ClienteAuxTo> clienteTos = new ArrayList<>();
+	    
+	    for (Cliente cliente : clientes) {
+	    	ClienteAuxTo clienteTo = this.convertirCliAuxTo(cliente);
+	        clienteTos.add(clienteTo);
+	    }
+	    
+	    return clienteTos;
+	}
+
+	@Override
+	public void eliminarCliente(Integer id) {
+		// TODO Auto-generated method stub
+		this.clienteRepository.eliminarCliente(id);
+	}
+
+	@Override
+	public void actualizarId(Cliente cliente) {
+		// TODO Auto-generated method stub
+		this.clienteRepository.actualizarId(cliente);
+	}
+
+	
+	
 	
 }
