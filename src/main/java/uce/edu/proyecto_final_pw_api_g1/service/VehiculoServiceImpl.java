@@ -17,7 +17,6 @@ import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.CobroRealizado;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Reserva;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Vehiculo;
-import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
 import uce.edu.proyecto_final_pw_api_g1.service.to.VehiculoTo;
 
 @Service

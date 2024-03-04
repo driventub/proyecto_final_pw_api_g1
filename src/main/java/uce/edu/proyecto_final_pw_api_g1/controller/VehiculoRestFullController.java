@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Vehiculo;
 import uce.edu.proyecto_final_pw_api_g1.service.IVehiculoService;
-import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
 import uce.edu.proyecto_final_pw_api_g1.service.to.ReservaAux;
 import uce.edu.proyecto_final_pw_api_g1.service.to.VehiculoTo;
 

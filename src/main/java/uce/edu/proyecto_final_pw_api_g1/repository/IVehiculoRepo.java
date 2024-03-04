@@ -2,7 +2,6 @@ package uce.edu.proyecto_final_pw_api_g1.repository;
 
 import java.util.List;
 
-import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Vehiculo;
 
 public interface IVehiculoRepo {
