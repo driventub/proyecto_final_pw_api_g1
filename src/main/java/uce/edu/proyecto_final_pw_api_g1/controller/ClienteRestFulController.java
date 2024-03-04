@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.service.IClienteService;
 import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
-import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteTo;
 
 
 @RestController
@@ -32,14 +31,22 @@ public class ClienteRestFulController {
 	private IClienteService clienteService;
 	
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String crear(@RequestBody Cliente cliente) {
-		String msj = "Cliente ingresado correctamente";
+	public ResponseEntity<String> crear(@RequestBody Cliente cliente) {
+		String msg;
+		HttpStatus status;
 		try {
-			this.clienteService.registrarCliente(cliente);
+			 msg = this.clienteService.registrarCliente(cliente);
+			if (msg == "Cliente registrado correctamente" ) {
+				status = HttpStatus.OK;
+			}else{
+				status = HttpStatus.NOT_FOUND;
+			}
 		} catch (Exception e) {
-			msj = "Error al ingresar el Cliente:... " + e;
+			msg = e.getMessage();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
 		}
-		return msj;
+		return ResponseEntity.status(status).body(msg);	
 	}
 	
 	@GetMapping(path = "/{cedula}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -57,11 +64,7 @@ public class ClienteRestFulController {
 		}
 		return msj;
 	}
-	
-	@GetMapping(path = "/vip" ,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ClienteTo>> listarClientesVip(){
-		return ResponseEntity.ok(this.clienteService.listaClientesVIP());
-	}
+
 	
 	@PatchMapping(path = "/{cedula}", consumes = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<String> actualizarCliente(@PathVariable("cedula") String cedula, @RequestBody Cliente cliente) {

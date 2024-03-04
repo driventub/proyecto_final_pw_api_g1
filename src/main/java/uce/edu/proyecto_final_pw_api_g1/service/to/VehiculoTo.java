@@ -3,9 +3,7 @@ package uce.edu.proyecto_final_pw_api_g1.service.to;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import org.springframework.hateoas.RepresentationModel;
-
-public class VehiculoTo extends RepresentationModel<VehiculoTo> implements Serializable{
+public class VehiculoTo implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 

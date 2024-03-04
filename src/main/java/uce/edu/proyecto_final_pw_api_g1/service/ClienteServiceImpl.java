@@ -1,8 +1,6 @@
 package uce.edu.proyecto_final_pw_api_g1.service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,19 +8,31 @@ import org.springframework.stereotype.Service;
 
 import uce.edu.proyecto_final_pw_api_g1.repository.ClienteRepoImpl;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
-import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Reserva;
 import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
-import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteTo;
 
 @Service
+
 public class ClienteServiceImpl implements IClienteService {
 
 	@Autowired
 	private ClienteRepoImpl clienteRepository;
 
 	@Override
-	public void registrarCliente(Cliente cliente) {
-		this.clienteRepository.registrarCliente(cliente);
+	public String registrarCliente(Cliente cliente) {
+
+		try {
+			Cliente clie = this.buscarClienteCedula(cliente.getCedula());
+			if (clie == null) {
+				this.clienteRepository.registrarCliente(cliente);
+				return "Cliente registrado correctamente";
+			}
+		} catch (Exception e) {
+			
+			return "Algo Fallo al ingresar el Cliente".concat(e.getMessage());
+		}
+
+		return "Ya existe un Cliente registrado con la cédula ingresada";
+
 	}
 
 	@Override
@@ -42,16 +52,7 @@ public class ClienteServiceImpl implements IClienteService {
 		return this.clienteRepository.buscarClienteCedula(idCliente);
 	}
 
-	@Override
-	public List<ClienteTo> listaClientesVIP() {
-		List<Cliente> lstClientes = this.clienteRepository.listarClientes();
-		List<ClienteTo> lstClientesTo = new ArrayList<>();
-		for (Cliente c : lstClientes) {
-			lstClientesTo.add(convertirClienteTo(c));
-		}
-		lstClientesTo.sort(Comparator.comparing(ClienteTo::getValorTotal).reversed());
-		return lstClientesTo;
-	}
+	
 
 	private ClienteAuxTo convertirCliAuxTo(Cliente cliente) {
 		ClienteAuxTo clAuxTo = new ClienteAuxTo();
@@ -66,34 +67,6 @@ public class ClienteServiceImpl implements IClienteService {
 		return clAuxTo;
 	}
 
-	private ClienteTo convertirClienteTo(Cliente cliente) {
-		ClienteTo clTo = new ClienteTo();
-		clTo.setCedula(cliente.getCedula());
-		clTo.setNombre(cliente.getNombre());
-		clTo.setApellido(cliente.getApellido());
-		clTo.setValorIva(valorIva(cliente.getReservas()));
-		clTo.setValorTotal(valorTotal(cliente.getReservas()));
-
-		return clTo;
-	}
-
-	private BigDecimal valorIva(List<Reserva> reservasCliente) {
-		BigDecimal valorI = new BigDecimal(0);
-		for (Reserva reserva : reservasCliente) {
-
-			valorI = valorI.add(reserva.getCobroRealizado().getValorIva());
-		}
-		return valorI;
-	}
-
-	private BigDecimal valorTotal(List<Reserva> reservasCliente) {
-		BigDecimal valorT = new BigDecimal(0);
-		for (Reserva reserva : reservasCliente) {
-			valorT = valorT.add(reserva.getValorPagar());
-		}
-		return valorT;
-	}
-
 	@Override
 	public void actualizarCliente(Cliente cliente) {
 		this.clienteRepository.actualizar(cliente);
@@ -101,7 +74,6 @@ public class ClienteServiceImpl implements IClienteService {
 
 	@Override
 	public void actualizarClienteParcial(Cliente cliente) {
-		// TODO Auto-generated method stub
 		this.clienteRepository.actualizarParcial(cliente);
 	}
 

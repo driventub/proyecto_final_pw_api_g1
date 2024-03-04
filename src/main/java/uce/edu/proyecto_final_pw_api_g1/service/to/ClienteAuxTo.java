@@ -3,9 +3,7 @@ package uce.edu.proyecto_final_pw_api_g1.service.to;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import org.springframework.hateoas.RepresentationModel;
-
-public class ClienteAuxTo extends RepresentationModel<ClienteAuxTo> implements Serializable{
+public class ClienteAuxTo implements Serializable{
 
 
 	private static final long serialVersionUID = 1L;
