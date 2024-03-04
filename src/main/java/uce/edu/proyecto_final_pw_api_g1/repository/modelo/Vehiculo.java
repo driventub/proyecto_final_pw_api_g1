@@ -41,7 +41,7 @@ public class Vehiculo implements Serializable{
 	private String paisFabricacion;
 	
 	@Column(name = "vehi_cilindraje")
-	private Integer cilindraje;
+	private BigDecimal cilindraje;
 	
 	@Column(name = "vehi_precio_vehiculo")
 	private BigDecimal precioVehiculo;
@@ -115,11 +115,11 @@ public class Vehiculo implements Serializable{
 		this.paisFabricacion = paisFabricacion;
 	}
 
-	public Integer getCilindraje() {
+	public BigDecimal getCilindraje() {
 		return cilindraje;
 	}
 
-	public void setCilindraje(Integer cilindraje) {
+	public void setCilindraje(BigDecimal cilindraje) {
 		this.cilindraje = cilindraje;
 	}
 
