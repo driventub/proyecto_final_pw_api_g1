@@ -21,7 +21,7 @@ public class VehiculoTo extends RepresentationModel<VehiculoTo> implements Seria
 	
 	private String paisFabricacion;
 	
-	private Integer cilindraje;
+	private BigDecimal cilindraje;
 	
 	private BigDecimal precioVehiculo;
 	
@@ -77,11 +77,11 @@ public class VehiculoTo extends RepresentationModel<VehiculoTo> implements Seria
 		this.paisFabricacion = paisFabricacion;
 	}
 
-	public Integer getCilindraje() {
+	public BigDecimal getCilindraje() {
 		return cilindraje;
 	}
 
-	public void setCilindraje(Integer cilindraje) {
+	public void setCilindraje(BigDecimal cilindraje) {
 		this.cilindraje = cilindraje;
 	}
 
