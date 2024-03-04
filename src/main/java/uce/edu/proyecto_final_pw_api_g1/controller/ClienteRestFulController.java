@@ -17,6 +17,8 @@ import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.service.IClienteService;
 import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
 import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteTo;
+import org.springframework.web.bind.annotation.PutMapping;
+
 
 @RestController
 @RequestMapping("/clientes")
@@ -32,7 +34,7 @@ public class ClienteRestFulController {
 		try {
 			this.clienteService.registrarCliente(cliente);
 		} catch (Exception e) {
-			msj = "Error al ingresar el Cliente" + e;
+			msj = "Error al ingresar el Cliente:... " + e;
 		}
 		return msj;
 	}
@@ -41,9 +43,24 @@ public class ClienteRestFulController {
 	public ResponseEntity<ClienteAuxTo> buscarClienteCedula(@PathVariable("cedula") String cedula){
 		return ResponseEntity.ok(this.clienteService.buscarClienteToCedula(cedula));
 	}
+
+	@PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public String actualizarCliente(@RequestBody Cliente cliente) {
+		String msj = "Cliente Actualizado correctamente";
+		try {
+			this.clienteService.actualizarCliente(cliente);
+		} catch (Exception e) {
+			msj = "Error al Actualizar el Cliente" + e;
+		}
+		return msj;
+	}
 	
 	@GetMapping(path = "/vip" ,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ClienteTo>> listarClientesVip(){
 		return ResponseEntity.ok(this.clienteService.listaClientesVIP());
 	}
+
+
+
+
 }
