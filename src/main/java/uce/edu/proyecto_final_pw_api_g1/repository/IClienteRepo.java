@@ -13,4 +13,12 @@ public interface IClienteRepo {
 	public List<Cliente> listarClientes();
 	
 	public void actualizar(Cliente cliente);
+	
+	public void actualizarParcial(Cliente cliente) ;
+	
+	public void eliminarCliente(Integer id);
+	
+	public Cliente buscarClienteId(Integer id);
+	
+	public void actualizarId(Cliente cliente);
 }
