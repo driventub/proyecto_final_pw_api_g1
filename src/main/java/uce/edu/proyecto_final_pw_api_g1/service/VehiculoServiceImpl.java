@@ -86,7 +86,8 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	public String reservaVehiculo(String placa, String cedula, String fechaInicio, String fechaFin,
 	        String numeroTarjeta) {
 	    try {
-	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	        // DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 	        LocalDateTime fInicio = LocalDateTime.parse(fechaInicio, formatter);
 	        LocalDateTime fFin = LocalDateTime.parse(fechaFin, formatter);
 

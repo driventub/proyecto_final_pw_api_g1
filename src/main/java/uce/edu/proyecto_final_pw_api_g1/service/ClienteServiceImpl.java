@@ -8,7 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import jakarta.transaction.Transactional;
+
 import uce.edu.proyecto_final_pw_api_g1.repository.ClienteRepoImpl;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Reserva;
