@@ -22,4 +22,13 @@ public interface IVehiculoService {
 	public String compruebaVehiculoPorPlacaFecha(String placa, String fInicio, String fFin);
 
 	public void retiraVehiculoReservado(Integer nReserva);
+	
+	
+	public void eliminarVehiculo(Integer id);
+	
+	public List<VehiculoTo> buscarVehiculo();
+	
+	public void actualizarId(Vehiculo vehiculo);
+	
+	
 }

@@ -18,4 +18,14 @@ public interface IClienteService {
 	
 	public void actualizarCliente(Cliente cliente);
 	
+	public void actualizarClienteParcial(Cliente cliente);
+	
+	
+	public List<ClienteAuxTo> verClientes();
+	
+	public void eliminarCliente(Integer id) ;
+
+	public void actualizarId(Cliente cliente);
+
+	
 }

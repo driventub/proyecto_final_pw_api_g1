@@ -2,7 +2,10 @@ package uce.edu.proyecto_final_pw_api_g1.service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,6 +17,7 @@ import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.CobroRealizado;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Reserva;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Vehiculo;
+import uce.edu.proyecto_final_pw_api_g1.service.to.ClienteAuxTo;
 import uce.edu.proyecto_final_pw_api_g1.service.to.VehiculoTo;
 
 @Service
@@ -80,53 +84,86 @@ public class VehiculoServiceImpl implements IVehiculoService {
 
 	@Override
 	public String reservaVehiculo(String placa, String cedula, String fechaInicio, String fechaFin,
-			String numeroTarjeta) {
+	        String numeroTarjeta) {
+	    try {
+	        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
+	        LocalDateTime fInicio = LocalDateTime.parse(fechaInicio, formatter);
+	        LocalDateTime fFin = LocalDateTime.parse(fechaFin, formatter);
 
-		LocalDateTime fInicio = LocalDateTime.parse(fechaInicio);
-		LocalDateTime fFin = LocalDateTime.parse(fechaFin);
-		String disponible = compruebaVehiculo(placa, fInicio, fFin);
-		String mensaje = "";
-		if (disponible == "ND") {
-			mensaje = "El vehículo de placa: " + placa + " no está disponible";
-			return mensaje;
-		} else {
-			Vehiculo vehiculo = this.vehiculoRepository.buscaVehiculoPorPlaca(placa);
-			Reserva reserva = new Reserva();
-			reserva.setFechaInicio(fInicio);
-			reserva.setFechaFin(fFin);
+	        String disponible = compruebaVehiculo(placa, fInicio, fFin);
+	        String mensaje = "";
+	        if ("ND".equals(disponible)) {
+	            mensaje = "El vehículo de placa: " + placa + " no está disponible";
+	            return mensaje;
+	            
+	            
+	        } else {
+	            Vehiculo vehiculo = this.vehiculoRepository.buscaVehiculoPorPlaca(placa);
+	            System.out.println(vehiculo);
+	            if (vehiculo == null) {
+	                return "No se encontró ningún vehículo con la placa proporcionada.";
+	            }
+	            
 
-			BigDecimal subtotal = this.diasReservado(fInicio, fFin).multiply(vehiculo.getValorDia());
-			BigDecimal valIva = subtotal.multiply(IVA);
-			BigDecimal valTotal = subtotal.add(valIva);
+	            Cliente cliente = this.clienteService.buscarClienteCedula(cedula);
+	            System.out.println(cliente);
+	            if (cliente == null) {
+	                return "No se encontró ningún cliente con la cédula proporcionada.";
+	                
+	            }
+	           
+	            
+	            cliente.setTarjetaCredito(numeroTarjeta);
 
-			reserva.setValorPagar(valTotal);
-			Integer num = (int) (Math.random() * (10000 + 1));
-			reserva.setNumeroReserva(num);
-			reserva.setEstado("G");
+	            Reserva reserva = new Reserva();
+	            reserva.setFechaInicio(fInicio);
+	            reserva.setFechaFin(fFin);
 
-			Cliente cliente = this.clienteService.buscarClienteCedula(cedula);
-			cliente.setTarjetaCredito(numeroTarjeta);
-			reserva.setCliente(cliente);
-			reserva.setVehiculo(vehiculo);
-			CobroRealizado cobroRealizado = new CobroRealizado();
-			cobroRealizado.setFechaCobro(fechaInicio);
-			cobroRealizado.setTarjeta(numeroTarjeta);
-			cobroRealizado.setValorSubtotal(subtotal);
-			cobroRealizado.setValorIva(valIva);
-			cobroRealizado.setValorPagar(valTotal);
-			cobroRealizado.setReserva(reserva);
+	            BigDecimal subtotal = this.diasReservado(fInicio, fFin).multiply(vehiculo.getValorDia());
+	            BigDecimal valIva = subtotal.multiply(IVA);
+	            BigDecimal valTotal = subtotal.add(valIva);
 
-			reserva.setCobroRealizado(cobroRealizado);
-			vehiculo.añadirReserva(reserva);
-			this.clienteService.actualizarCliente(cliente);
-			this.reservaService.crearReserva(reserva);
+	            reserva.setValorPagar(valTotal);
+	            Integer num = (int) (Math.random() * (10000 + 1));
+	            reserva.setNumeroReserva(num);
+	            reserva.setEstado("G");
 
-			this.vehiculoRepository.actualiza(vehiculo);
-			mensaje = "Vehiculo reservado correctamente, numero de reserva: " + num.toString();
-			return mensaje;
-		}
+	            reserva.setCliente(cliente);
+	            reserva.setVehiculo(vehiculo);
 
+	            CobroRealizado cobroRealizado = new CobroRealizado();
+	            cobroRealizado.setFechaCobro(fechaInicio);
+	            cobroRealizado.setTarjeta(numeroTarjeta);
+	            cobroRealizado.setValorSubtotal(subtotal);
+	            cobroRealizado.setValorIva(valIva);
+	            cobroRealizado.setValorPagar(valTotal);
+	            cobroRealizado.setReserva(reserva);
+
+	            reserva.setCobroRealizado(cobroRealizado);
+
+	            vehiculo.añadirReserva(reserva);
+
+	            this.clienteService.actualizarClienteParcial(cliente);
+	            this.reservaService.crearReserva(reserva);
+	            this.vehiculoRepository.actualiza(vehiculo);
+
+	            mensaje = "Vehiculo reservado correctamente, numero de reserva: " + num.toString();
+	            return mensaje;
+	        }
+	    } catch (DateTimeParseException e) {
+	        System.err.println("Error al parsear la fecha: " + e.getMessage());
+	        e.printStackTrace();
+	        return "Error al parsear la fecha. Verifique el formato de la fecha proporcionada.";
+	    } catch (Exception e) {
+	        // Manejo de otros errores
+	        e.printStackTrace();
+	        return "Ocurrió un error al procesar la reserva del vehículo.";
+	    }
 	}
+
+
+	
+	
 
 	public BigDecimal diasReservado(LocalDateTime fechaInicio, LocalDateTime fechaFin) {
 		Long diasReservado = ChronoUnit.DAYS.between(fechaInicio, fechaFin);
@@ -192,7 +229,7 @@ public class VehiculoServiceImpl implements IVehiculoService {
 		vehiT.setPlaca(vehiculo.getPlaca());
 		vehiT.setModelo(vehiculo.getModelo());
 		vehiT.setMarca(vehiculo.getMarca());
-		vehiT.setAnioFablicacion(vehiculo.getAnioFablicacion().toString());
+		vehiT.setAnioFablicacion(vehiculo.getAnioFablicacion());
 		vehiT.setPaisFabricacion(vehiculo.getPaisFabricacion());
 		vehiT.setCilindraje(vehiculo.getCilindraje());
 		vehiT.setPrecioVehiculo(vehiculo.getPrecioVehiculo());
@@ -200,5 +237,33 @@ public class VehiculoServiceImpl implements IVehiculoService {
 		vehiT.setDisponible(vehiculo.getDisponible());
 		return vehiT;
 	}
+
+	@Override
+	public void eliminarVehiculo(Integer id) {
+		// TODO Auto-generated method stub
+		this.vehiculoRepository.eliminarVehiculo(id);
+	}
+
+	@Override
+	public List<VehiculoTo> buscarVehiculo() {
+		// TODO Auto-generated method stub
+		List<Vehiculo> vehiculos = this.vehiculoRepository.listarVehiculo();
+	    List<VehiculoTo> vehiculosTos = new ArrayList<>();
+	    
+	    for (Vehiculo vehiculo : vehiculos) {
+	    	VehiculoTo vehiculoTo = this.convertir(vehiculo);
+	    	vehiculosTos.add(vehiculoTo);
+	    }
+	    
+	    return vehiculosTos;
+	}
+
+	@Override
+	public void actualizarId(Vehiculo vehiculo) {
+		// TODO Auto-generated method stub
+		this.vehiculoRepository.actualizarId(vehiculo);
+	}
+
+	
 
 }

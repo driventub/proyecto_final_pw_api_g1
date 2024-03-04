@@ -7,6 +7,8 @@ import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.TypedQuery;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Repository;
+
+import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Cliente;
 import uce.edu.proyecto_final_pw_api_g1.repository.modelo.Vehiculo;
 
 @Repository
@@ -44,6 +46,33 @@ public class VehiculoRepoImpl implements IVehiculoRepo {
 	@Override
 	public void actualiza(Vehiculo vehiculo) {
 		this.entityManager.persist(vehiculo);
+	}
+
+	@Override
+	public void eliminarVehiculo(Integer id) {
+		// TODO Auto-generated method stub
+		Vehiculo vehiculo = this.buscarVehiculoId(id);
+		this.entityManager.remove(vehiculo);
+	}
+
+	@Override
+	public List<Vehiculo> listarVehiculo() {
+		// TODO Auto-generated method stub
+		TypedQuery<Vehiculo> myQuery = this.entityManager.createQuery("SELECT v FROM Vehiculo v",Vehiculo.class);
+		return myQuery.getResultList();
+	}
+
+	@Override
+	public Vehiculo buscarVehiculoId(Integer id) {
+		// TODO Auto-generated method stub
+		return this.entityManager.find(Vehiculo.class, id);
+	}
+	
+	public void actualizarId(Vehiculo vehiculo) {
+		// TODO Auto-generated method stub
+		
+		this.entityManager.merge(vehiculo);
+
 	}
 
 
