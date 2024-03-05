@@ -34,8 +34,19 @@ public class VehiculoServiceImpl implements IVehiculoService {
 	private IReservaService reservaService;
 
 	@Override
-	public void crear(Vehiculo vehiculo) {
-		this.vehiculoRepository.crear(vehiculo);
+	public String crear(Vehiculo vehiculo) {
+		try {
+			Vehiculo clie = this.buscaVehiculoPlaca(vehiculo.getPlaca());
+			if (clie == null) {
+				this.vehiculoRepository.crear(vehiculo);
+				return "Vehiculo registrado correctamente";
+			}
+		} catch (Exception e) {
+			
+			return "Algo Fallo al ingresar el Vehiculo".concat(e.getMessage());
+		}
+
+		return "Ya existe un Vehiculo registrado con la placa ingresada";
 	}
 
 	@Override

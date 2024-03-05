@@ -49,14 +49,22 @@ public class VehiculoRestFullController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-	public String crear(@RequestBody Vehiculo vehiculo) {
-		String msj = "Vehiculo ingresado correctamente";
+	public ResponseEntity<String> crear(@RequestBody Vehiculo vehiculo) {
+		String msg;
+		HttpStatus status;
 		try {
-			this.vehiculoService.crear(vehiculo);
+			 msg = this.vehiculoService.crear(vehiculo);
+			if (msg == "Vehiculo registrado correctamente" ) {
+				status = HttpStatus.OK;
+			}else{
+				status = HttpStatus.NOT_FOUND;
+			}
 		} catch (Exception e) {
-			msj = "Error al ingresar el vehículo" + e;
+			msg = e.getMessage();
+			status = HttpStatus.INTERNAL_SERVER_ERROR;
+			
 		}
-		return msj;
+		return ResponseEntity.status(status).body(msg);
 	}
 
 	@GetMapping(path = "/{placa}", produces = MediaType.APPLICATION_JSON_VALUE)

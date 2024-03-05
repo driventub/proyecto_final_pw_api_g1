@@ -7,7 +7,7 @@ import uce.edu.proyecto_final_pw_api_g1.service.to.VehiculoTo;
 
 public interface IVehiculoService {
 
-	public void crear(Vehiculo vehiculo);
+	public String crear(Vehiculo vehiculo);
 	
 	public List<VehiculoTo> buscaVehiculosDisponibles(String marca, String modelo);
 	
